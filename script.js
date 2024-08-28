@@ -1,38 +1,27 @@
 
-let humanScore = 0;
-let computerScore = 0;
+const ROUNDS = 5;
 
-function getComputerChoice () {
-    
-    let choice;
+playGame(ROUNDS);
 
-    let randomNumber = Math.random();
-    
-    if (randomNumber < 1/3) {
-        choice = "rock";
-    }
-    else if (randomNumber < 2/3) {
-        choice = "paper";
-    }
-    else {
-        choice = "scissors";
-    }
+function playGame (rounds) {
 
-    return choice;
-}
+    let humanScore = 0;
+    let computerScore = 0;
+    let result;
 
-function getHumanChoice () {
+    for (let i = 1; i <= rounds; i++) {
+        result = playRound(getHumanChoice(i), getComputerChoice());
+        
+        switch (result) {
+            case "win": humanScore++; break;
+            case "lose": computerScore++; break;
+        }
 
-    let choice = prompt("rock, paper, scissors?").toLowerCase();
-
-    while (choice != "rock" && choice != "paper" && choice != "scissors") {
-        alert("illegal input!");
-        choice = prompt("rock, paper, scissors?").toLowerCase();
+        showScore(humanScore, computerScore);
     }
 
-    return choice;
-
-}
+    showGameResult(humanScore, computerScore);
+} 
 
 function playRound (humanChoice, computerChoice) {
     
@@ -63,33 +52,70 @@ function playRound (humanChoice, computerChoice) {
     }
     }
     
-    adjustScore(result);
-    showResult(result, humanChoice, computerChoice);
+    showRoundResult(result, humanChoice, computerChoice);
+
+    return result;
 }
 
-function adjustScore (result) {
-    switch (result) {
-        case "win": humanScore++; break;
-        case "lose": computerScore++; break;
-    }
-}
-
-function showResult (result, humanChoice, computerChoice) {
+function getComputerChoice () {
     
-    let scoreDisplay = `score ${humanScore} - ${computerScore}.`; 
+    let choice;
+    let randomNumber = Math.random();
     
-    if (result === 'win') {
-        console.log(`you win! ${humanChoice} beats ${computerChoice}. ${scoreDisplay}`);
+    if (randomNumber < 1/3) {
+        choice = "rock";
     }
-    else if (result === 'lose') {
-        console.log(`you lose! ${computerChoice} beats ${humanChoice}. ${scoreDisplay}`);
+    else if (randomNumber < 2/3) {
+        choice = "paper";
     }
     else {
-        console.log(`it's a tie! ${scoreDisplay}`);
+        choice = "scissors";
+    }
+
+    return choice;
+}
+
+function getHumanChoice (roundIndex) {
+
+    let choice = prompt(`round ${roundIndex}!  rock, paper, scissors?`).toLowerCase();
+
+    while (choice != "rock" && choice != "paper" && choice != "scissors") {
+        alert("illegal input!");
+        choice = prompt(`round ${roundIndex}! rock, paper, scissors?`).toLowerCase();
+    }
+
+    return choice;
+
+}
+
+function showRoundResult (result, humanChoice, computerChoice) {
+    
+    if (result === 'win') {
+        console.log(`you win! ${humanChoice} beats ${computerChoice}.`);
+    }
+    else if (result === 'lose') {
+        console.log(`you lose! ${computerChoice} beats ${humanChoice}.`);
+    }
+    else {
+        console.log(`it's a tie! ${humanChoice} against ${computerChoice}.`);
     }
 }
 
-playRound(getHumanChoice(), getComputerChoice());
+function showScore (humanScore, computerScore) {
+    console.log(`the score is ${humanScore} - ${computerScore}.`);
+}
 
-//console.log(getHumanChoice());
+function showGameResult (humanScore, computerScore) {
+    
+    let scoreDisplay = `${humanScore} - ${computerScore}`;
 
+    if (humanScore > computerScore) {
+        console.log(`congratulations! you have won with a score of ${scoreDisplay}.`);
+    }
+    else if (humanScore < computerScore) {
+        console.log(`better luck next time! you have lost with a score of ${scoreDisplay}.`);
+    }
+    else {
+        console.log(`the game is over and it's a tie! the score is ${scoreDisplay}.`);
+    }
+}
