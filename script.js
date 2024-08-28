@@ -5,15 +5,30 @@ function getComputerChoice () {
     let randomNumber = Math.random();
     
     if (randomNumber < 1/3) {
-        choice = "Rock";
+        choice = "rock";
     }
     else if (randomNumber < 2/3) {
-        choice = "Paper";
+        choice = "paper";
     }
     else {
-        choice = "Scissors";
+        choice = "scissors";
     }
 
     return choice;
 }
+
+function getHumanChoice () {
+
+    let choice = prompt("rock, paper, scissors?");
+
+    while (choice != "rock" && choice != "paper" && choice != "scissors") {
+        alert("illegal input!");
+        choice = prompt("rock, paper, scissors?");
+    }
+
+    return choice;
+
+}
+
+//console.log(getHumanChoice());
 
