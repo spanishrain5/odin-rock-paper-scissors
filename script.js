@@ -75,14 +75,17 @@ function adjustScore (result) {
 }
 
 function showResult (result, humanChoice, computerChoice) {
+    
+    let scoreDisplay = `score ${humanScore} - ${computerScore}.`; 
+    
     if (result === 'win') {
-        console.log(`you win! ${humanChoice} beats ${computerChoice}. score ${humanScore} - ${computerScore}.`);
+        console.log(`you win! ${humanChoice} beats ${computerChoice}. ${scoreDisplay}`);
     }
     else if (result === 'lose') {
-        console.log(`you lose! ${computerChoice} beats ${humanChoice}. score ${humanScore} - ${computerScore}.`);
+        console.log(`you lose! ${computerChoice} beats ${humanChoice}. ${scoreDisplay}`);
     }
     else {
-        console.log(`it's a tie! score ${humanScore} - ${computerScore}.`);
+        console.log(`it's a tie! ${scoreDisplay}`);
     }
 }
 
