@@ -68,11 +68,22 @@ function playRound (humanChoice, computerChoice) {
 }
 
 function adjustScore (result) {
-
+    switch (result) {
+        case "win": humanScore++; break;
+        case "lose": computerScore++; break;
+    }
 }
 
 function showResult (result, humanChoice, computerChoice) {
-    
+    if (result === 'win') {
+        console.log(`you win! ${humanChoice} beats ${computerChoice}. score ${humanScore} - ${computerScore}.`);
+    }
+    else if (result === 'lose') {
+        console.log(`you lose! ${computerChoice} beats ${humanChoice}. score ${humanScore} - ${computerScore}.`);
+    }
+    else {
+        console.log(`it's a tie! score ${humanScore} - ${computerScore}.`);
+    }
 }
 
 playRound(getHumanChoice(), getComputerChoice());
