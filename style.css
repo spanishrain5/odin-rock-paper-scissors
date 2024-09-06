@@ -19,12 +19,33 @@ body {
     margin: auto;
 }
 
+#start-button {
+    display: flex;
+    align-items: center;
+    height: 300px;
+}
+
+#start-button > button {
+    width: 400px;
+    height: 100px;
+    background-color: white;
+    border-radius: 10px;
+    border: 3px solid black;
+    font-family: "Courier Prime", monospace;
+    font-size: 16px;
+}
+
+#start-button > button:hover {
+    background-color: rgb(197, 197, 197);
+}
+
 #round-text {
     margin: 0;
 }
 
 #buttons {
-    display: flex;
+    display: none;
+    visibility: hidden;
     gap: 10px;
 }
 
