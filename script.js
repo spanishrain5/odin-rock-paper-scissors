@@ -1,27 +1,87 @@
+// round 1, round line says title, other lines blank
+// if player clicks button, playRound is called:
+//      get player choice
+//      get computer choice
+//      call showRoundResult
+//      call updateScore
+//      increment roundIndex 
+// if roundIndex = rounds when button is clicked, also call showGameResult
+// if roundIndex = rounds+1 when button is clicked, only call newGame
+/*
+
+let humanScore = 0;
+let computerScore = 0;
+let roundIndex = 1;
+
+buttons.addEventListener('click', (event) => buttonClickHandler(event));
+
+function buttonClickHandler(event) {
+    playerChoice = event.target.id || event.target.parentNode.id;
+
+    if (roundIndex === ROUNDS + 1) {
+        restartGame();
+    } else if (roundIndex === ROUNDS) {
+        playRound();
+        showGameResult();
+    } else {
+        playRound(); 
+    }
+}
+
+function playRound (playerChoice, getComputerChoice) {
+    *calculate winner*
+
+    showRoundResult();
+    updateScore();
+
+    roundIndex++;
+}
+
+function newGame () {
+    let humanScore = 0;
+    let computerScore = 0;
+    let roundIndex = 1;
+
+    roundLine = "title";
+    logLine = " ";
+    scoreLine = " ";
+}
+
+*/
+
 
 const ROUNDS = 5;
 
-playGame(ROUNDS);
+const roundLine = document.querySelector('#round-text');
+const buttons = document.querySelector('#buttons');
+const rockButton = document.querySelector('#rock');
+const paperButton = document.querySelector('#paper');
+const scissorsButton = document.querySelector('#scissors');
+const logLine = document.querySelector('#log');
+const scoreLine = document.querySelector('#score');
 
-function playGame (rounds) {
+let humanChoice;
+let humanScore = 0;
+let computerScore = 0;
+let roundIndex = 1;
 
-    let humanScore = 0;
-    let computerScore = 0;
-    let result;
+buttons.addEventListener('click', (event) => buttonClickHandler(event));
 
-    for (let i = 1; i <= rounds; i++) {
-        result = playRound(getHumanChoice(i), getComputerChoice());
-        
-        switch (result) {
-            case "win": humanScore++; break;
-            case "lose": computerScore++; break;
-        }
+function buttonClickHandler(event) {
+    
+    roundLine.textContent = " ";
+    
+    humanChoice = event.target.id || event.target.parentNode.id;
 
-        showScore(humanScore, computerScore);
+    if (roundIndex === ROUNDS + 1) {
+        newGame();
+    } else if (roundIndex === ROUNDS) {
+        playRound(humanChoice, getComputerChoice());
+        showGameResult();
+    } else {
+        playRound(humanChoice, getComputerChoice()); 
     }
-
-    showGameResult(humanScore, computerScore);
-} 
+}
 
 function playRound (humanChoice, computerChoice) {
     
@@ -53,8 +113,9 @@ function playRound (humanChoice, computerChoice) {
     }
     
     showRoundResult(result, humanChoice, computerChoice);
+    updateScore(result);
 
-    return result;
+    roundIndex++;
 }
 
 function getComputerChoice () {
@@ -75,47 +136,54 @@ function getComputerChoice () {
     return choice;
 }
 
-function getHumanChoice (roundIndex) {
-
-    let choice = prompt(`round ${roundIndex}!  rock, paper, scissors?`).toLowerCase();
-
-    while (choice != "rock" && choice != "paper" && choice != "scissors") {
-        alert("illegal input!");
-        choice = prompt(`round ${roundIndex}! rock, paper, scissors?`).toLowerCase();
-    }
-
-    return choice;
-
-}
-
 function showRoundResult (result, humanChoice, computerChoice) {
     
     if (result === 'win') {
-        console.log(`you win! ${humanChoice} beats ${computerChoice}.`);
+        logLine.textContent = `you win! ${humanChoice} beats ${computerChoice}.`;
     }
     else if (result === 'lose') {
-        console.log(`you lose! ${computerChoice} beats ${humanChoice}.`);
+        logLine.textContent = `you lose! ${computerChoice} beats ${humanChoice}.`;
     }
     else {
-        console.log(`it's a tie! ${humanChoice} against ${computerChoice}.`);
+        logLine.textContent = `it's a tie! ${humanChoice} against ${computerChoice}.`;
     }
+
+    //roundLine.textContent = `round ${roundIndex}!`;
 }
 
-function showScore (humanScore, computerScore) {
-    console.log(`the score is ${humanScore} - ${computerScore}.`);
+function updateScore (result) {
+    switch (result) {
+        case 'win' : humanScore++; break;
+        case 'lose' : computerScore++; break;
+    }
+    scoreLine.textContent = `${humanScore} - ${computerScore}`;
 }
 
-function showGameResult (humanScore, computerScore) {
-    
+function showGameResult () {
+
     let scoreDisplay = `${humanScore} - ${computerScore}`;
-
+    
     if (humanScore > computerScore) {
-        console.log(`congratulations! you have won with a score of ${scoreDisplay}.`);
+        scoreLine.textContent = `congratulations! you have won with a score of ${scoreDisplay}. click any button to restart.`;
+        scoreLine.setAttribute("style", "color: green;");
     }
     else if (humanScore < computerScore) {
-        console.log(`better luck next time! you have lost with a score of ${scoreDisplay}.`);
+        scoreLine.textContent = `better luck next time! you have lost with a score of ${scoreDisplay}. click any button to restart.`;
+        scoreLine.setAttribute("style", "color: red;");
     }
     else {
-        console.log(`the game is over and it's a tie! the score is ${scoreDisplay}.`);
+        scoreLine.textContent = `the game is over and it's a tie! click any button to restart.`;
+        scoreLine.setAttribute("style", "color: orange;");
     }
+}
+
+function newGame () {
+    humanScore = 0;
+    computerScore = 0;
+    roundIndex = 1;
+
+    roundLine.textContent = "rock, paper, scissors?";
+    scoreLine.setAttribute("style", "color: black;");
+    logLine.textContent = " ";
+    scoreLine.textContent = " ";
 }

@@ -19,6 +19,10 @@ body {
     margin: auto;
 }
 
+#round-text {
+    margin: 0;
+}
+
 #buttons {
     display: flex;
     gap: 10px;
