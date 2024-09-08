@@ -1,57 +1,9 @@
-// round 1, round line says title, other lines blank
-// if player clicks button, playRound is called:
-//      get player choice
-//      get computer choice
-//      call showRoundResult
-//      call updateScore
-//      increment roundIndex 
-// if roundIndex = rounds when button is clicked, also call showGameResult
-// if roundIndex = rounds+1 when button is clicked, only call newGame
-/*
+const ROUNDS = 10;
+const ROUND_END_TIMEOUT = 1000;
+const WIN_COLOR = 'green';
+const LOSE_COLOR = 'red';
 
-let humanScore = 0;
-let computerScore = 0;
-let roundIndex = 1;
-
-buttons.addEventListener('click', (event) => buttonClickHandler(event));
-
-function buttonClickHandler(event) {
-    playerChoice = event.target.id || event.target.parentNode.id;
-
-    if (roundIndex === ROUNDS + 1) {
-        restartGame();
-    } else if (roundIndex === ROUNDS) {
-        playRound();
-        showGameResult();
-    } else {
-        playRound(); 
-    }
-}
-
-function playRound (playerChoice, getComputerChoice) {
-    *calculate winner*
-
-    showRoundResult();
-    updateScore();
-
-    roundIndex++;
-}
-
-function newGame () {
-    let humanScore = 0;
-    let computerScore = 0;
-    let roundIndex = 1;
-
-    roundLine = "title";
-    logLine = " ";
-    scoreLine = " ";
-}
-
-*/
-
-
-const ROUNDS = 5;
-
+const startButton = document.querySelector('#start-button');
 const roundLine = document.querySelector('#round-text');
 const buttons = document.querySelector('#buttons');
 const rockButton = document.querySelector('#rock');
@@ -59,34 +11,49 @@ const paperButton = document.querySelector('#paper');
 const scissorsButton = document.querySelector('#scissors');
 const logLine = document.querySelector('#log');
 const scoreLine = document.querySelector('#score');
+let humanChoiceButton;
 
 let humanChoice;
-let humanScore = 0;
-let computerScore = 0;
-let roundIndex = 1;
+let humanScore;
+let computerScore;
+let roundIndex;
+let result;
+let scoreDisplay;
+let choice;
+let randomNumber;
 
+startButton.addEventListener('click', () => startNewGame());
 buttons.addEventListener('click', (event) => buttonClickHandler(event));
+buttons.classList.add('hidden', 'disabled');
+
+function startNewGame () {
+    humanScore = 0;
+    computerScore = 0;
+    roundIndex = 1;
+
+    roundLine.textContent = `round ${roundIndex}/${ROUNDS}`;
+    roundLine.style.color = 'black';
+    logLine.textContent = " ";
+    scoreLine.textContent = `${humanScore} - ${computerScore}`;
+    scoreLine.style.color = 'black';
+
+    startButton.classList.add('hidden');
+    buttons.classList.remove('hidden', 'disabled');  
+}
 
 function buttonClickHandler(event) {
     
-    roundLine.textContent = " ";
-    
     humanChoice = event.target.id || event.target.parentNode.id;
 
-    if (roundIndex === ROUNDS + 1) {
-        newGame();
-    } else if (roundIndex === ROUNDS) {
+    if (humanChoice != 'buttons') {
+        humanChoiceButton = document.querySelector(`#${humanChoice}`);
         playRound(humanChoice, getComputerChoice());
-        showGameResult();
-    } else {
-        playRound(humanChoice, getComputerChoice()); 
     }
+    
 }
 
 function playRound (humanChoice, computerChoice) {
     
-    let result;
-
     if (humanChoice === computerChoice) {
         result = "tie";
     } else {
@@ -112,16 +79,13 @@ function playRound (humanChoice, computerChoice) {
     }
     }
     
+    if (result !== 'tie') updateScore(result);
     showRoundResult(result, humanChoice, computerChoice);
-    updateScore(result);
-
-    roundIndex++;
 }
 
 function getComputerChoice () {
     
-    let choice;
-    let randomNumber = Math.random();
+    randomNumber = Math.random();
     
     if (randomNumber < 1/3) {
         choice = "rock";
@@ -139,16 +103,24 @@ function getComputerChoice () {
 function showRoundResult (result, humanChoice, computerChoice) {
     
     if (result === 'win') {
-        logLine.textContent = `you win! ${humanChoice} beats ${computerChoice}.`;
+        humanChoiceButton.style.backgroundColor = WIN_COLOR;
+        logLine.textContent = `${humanChoice} beats ${computerChoice}.`;
     }
     else if (result === 'lose') {
-        logLine.textContent = `you lose! ${computerChoice} beats ${humanChoice}.`;
+        humanChoiceButton.style.backgroundColor = LOSE_COLOR;
+        logLine.textContent = `${computerChoice} beats ${humanChoice}.`;
     }
     else {
-        logLine.textContent = `it's a tie! ${humanChoice} against ${computerChoice}.`;
+        logLine.textContent = `${humanChoice} against ${computerChoice}.`;
     }
 
-    //roundLine.textContent = `round ${roundIndex}!`;
+    buttons.classList.add('disabled');
+
+    setTimeout(() => {
+        if (roundIndex < ROUNDS) {setupNewRound();}
+        else {endGame();}
+    }, ROUND_END_TIMEOUT);
+
 }
 
 function updateScore (result) {
@@ -159,31 +131,37 @@ function updateScore (result) {
     scoreLine.textContent = `${humanScore} - ${computerScore}`;
 }
 
-function showGameResult () {
-
-    let scoreDisplay = `${humanScore} - ${computerScore}`;
-    
-    if (humanScore > computerScore) {
-        scoreLine.textContent = `congratulations! you have won with a score of ${scoreDisplay}. click any button to restart.`;
-        scoreLine.setAttribute("style", "color: green;");
-    }
-    else if (humanScore < computerScore) {
-        scoreLine.textContent = `better luck next time! you have lost with a score of ${scoreDisplay}. click any button to restart.`;
-        scoreLine.setAttribute("style", "color: red;");
-    }
-    else {
-        scoreLine.textContent = `the game is over and it's a tie! click any button to restart.`;
-        scoreLine.setAttribute("style", "color: orange;");
-    }
+function setupNewRound() {
+    roundIndex++;
+    roundLine.textContent = `round ${roundIndex}/${ROUNDS}`;
+    logLine.textContent = ' ';
+    humanChoiceButton.style.backgroundColor = '';
+    buttons.classList.remove('disabled');
 }
 
-function newGame () {
-    humanScore = 0;
-    computerScore = 0;
-    roundIndex = 1;
+function endGame() {
 
-    roundLine.textContent = "rock, paper, scissors?";
-    scoreLine.setAttribute("style", "color: black;");
     logLine.textContent = " ";
     scoreLine.textContent = " ";
+    humanChoiceButton.style.backgroundColor = '';
+    
+    scoreDisplay = `${humanScore} - ${computerScore}`;
+    
+    if (humanScore > computerScore) {
+        roundLine.textContent = `you win with a score of ${scoreDisplay}.`;
+    }
+    else if (humanScore < computerScore) {
+        roundLine.textContent = `you lost with a score of ${scoreDisplay}.`;
+    }
+    else {
+        roundLine.textContent = `it's a tie.`;
+    }
+
+    buttons.classList.add('hidden');
+    startButton.classList.remove('hidden');
+    
+    startButton.firstElementChild.innerText = 'play again';
+    
 }
+
+

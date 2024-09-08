@@ -9,6 +9,7 @@ body {
     align-items: center;
     height: 100%;
     font-family: "Courier Prime", monospace;
+    font-weight: bold;
 }
 
 #game-container {
@@ -22,7 +23,7 @@ body {
 #start-button {
     display: flex;
     align-items: center;
-    height: 300px;
+    /* height: 300px; */
 }
 
 #start-button > button {
@@ -32,6 +33,7 @@ body {
     border-radius: 10px;
     border: 3px solid black;
     font-family: "Courier Prime", monospace;
+    font-weight: bold;
     font-size: 16px;
 }
 
@@ -44,9 +46,9 @@ body {
 }
 
 #buttons {
-    display: none;
-    visibility: hidden;
     gap: 10px;
+    display: flex;
+    flex-direction: row;
 }
 
 #buttons > button {
@@ -71,17 +73,33 @@ body {
 
 #buttons > button > span {
     margin-top: -20px;
-    font-family: "Courier Prime", monospace;   
+    font-family: "Courier Prime", monospace;
+    font-weight: bold;   
 }
 
 #status-text {
     display: flex;
     flex-direction: column;
-    gap: 20px;
+    gap: 35px;
 }
 
 #status-text > p {
     margin: 0;
     text-align: center;
+}
+
+#log {
+    margin-top: -20px;
+    height: 12px;
+}
+
+.hidden {
+    display: none;
+    visibility: hidden;
+    height: 0;
+}
+
+.disabled {
+    pointer-events: none;
 }
 
